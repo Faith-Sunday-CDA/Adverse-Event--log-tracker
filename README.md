@@ -400,3 +400,10 @@ ae-log-tracker/
 This project demonstrates how an Excel-based workflow can be used to structure AE data, apply predefined data-quality checks, identify records requiring review, and present dataset-level quality metrics.
 
 It also provides a foundation for extending the workflow into more advanced clinical data operations, query management, reporting, and automation.
+
+
+## Access the Full Workbook
+
+The complete Excel workbook, including the AE Log, Reference Lists, Summary Dashboard, and supporting files, is available here:
+
+[View the full workbook on Google Drive](https://drive.google.com/drive/folders/1FIMjJi6vmpuvuhQmTM-709LE3UC6wBZ1)
