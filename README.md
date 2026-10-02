@@ -1,31 +1,26 @@
-Adverse Event (AE) Log Tracker & Data Quality Monitoring Tool
+## Adverse Event (AE) Log Tracker & Data Quality Monitoring Tool
 
 An Excel-based clinical data quality tool designed to simulate a first-pass review of adverse event (AE) data in a fictional Phase III oncology trial.
-
 The tracker combines controlled data entry, rule-based validation, automated flagging, and summary reporting to identify incomplete records, potential classification inconsistencies, and events requiring review or escalation.
 
 The dataset structure was informed by concepts and fields used in the FDA Adverse Event Reporting System (FAERS), while the workflow was adapted for a simulated clinical-trial AE log.
 
 «Portfolio project: All study, patient, site, and AE data are simulated. No real patient data is used.»
-
 "AE Log with auto-flags" (docs/screenshots/02-ae-log-autoflags.jpg)
 
 
 
-Project at a Glance
-
-| 
-Role| Clinical Data Analyst — Independent Portfolio Project
-Tool| Microsoft Excel
+## Project at a Glance
+Role: Clinical Data Analyst — Independent Portfolio Project
+Tool: Microsoft Excel
 Study context| Fictional Phase III oncology trial
 Sites| 4
-AE records| 52 simulated records
-Core workflow| AE data entry → validation → automated flagging → review → summary
-Core feature| Formula-driven "AUTO-FLAG" column
-Output| Four-sheet Excel workbook with controlled entry fields and live summary reporting
+AE records: 52 simulated records
+Core workflow: AE data entry → validation → automated flagging → review → summary
+Core feature: Formula-driven "AUTO-FLAG" column
+Output: Four-sheet Excel workbook with controlled entry fields and live summary reporting
 
-Concepts Applied
-
+## Concepts Applied
 - ICH E6(R2) Good Clinical Practice
 - ICH E2A seriousness criteria
 - CTCAE severity grading
@@ -35,7 +30,7 @@ Concepts Applied
 - Query identification and escalation
 
 
-The Problem
+## THE PROBLEM 
 Clinical data requires systematic review before it can be considered ready for downstream analysis or database lock.
 
 An AE record may be present in the database but still contain problems such as:
@@ -51,8 +46,7 @@ Reviewing these issues manually across a large dataset can make it difficult to 
 This project demonstrates how simple spreadsheet automation can support a structured first-pass data quality review.
 
 
-
-What I Built
+## What I Built
 
 I designed an Excel-based AE tracker that allows a reviewer to:
 
@@ -66,7 +60,7 @@ I designed an Excel-based AE tracker that allows a reviewer to:
 The goal was not to recreate a production EDC or safety database, but to demonstrate how clinical data requirements can be translated into a practical, rule-based workflow.
 
 
-Trial Context
+## Trial Context
 The project uses a fictional Phase III oncology study to provide a realistic context for the dataset.
 
 - Study type: Fictional Phase III oncology trial
@@ -79,9 +73,7 @@ The project uses a fictional Phase III oncology study to provide a realistic con
 - Data structure: Informed by FAERS concepts
 
 
-
-Data Quality Workflow
-
+## Data Quality Workflow
 The workflow follows a simplified clinical data review process:
 
 AE Data Entry
@@ -99,16 +91,15 @@ Dashboard & Quality Summary
 This separates data capture from data-quality review, making it easier to identify records that require follow-up.
 
 
-Methodology
+## Methodology
 
-1. Data Structure Design
+# 1. Data Structure Design
 
 I defined the fields required to capture and review each simulated AE record, using FAERS-informed concepts while adapting the structure to a clinical-trial workflow.
 
-2. Controlled Reference Values
+# 2. Controlled Reference Values
 
 I created a dedicated reference sheet containing standardised values for:
-
 - Severity grade
 - System Organ Class
 - Seriousness criteria
@@ -118,12 +109,10 @@ I created a dedicated reference sheet containing standardised values for:
 
 These values feed the workbook's dropdown menus and reduce free-text variation.
 
-3. Simulated Data Creation
+# 3. Simulated Data Creation
 
 I created a dataset of 52 AE records and deliberately introduced data-quality issues into selected records.
-
 Examples include:
-
 - Missing onset dates
 - Missing severity grades
 - Serious events without recorded seriousness criteria
@@ -136,63 +125,55 @@ The deliberate errors provided known test cases for validating the automated che
 
 "Dataset notes and field legend" (docs/screenshots/06-notes-and-legend.jpg)
 
-4. Validation Logic
+# 4. Validation Logic
 
 I created formula-based rules that evaluate each AE record and return an "AUTO-FLAG" status.
-
 The logic checks for defined completeness and consistency conditions rather than attempting to determine clinical correctness.
 
-5. Visual Prioritisation
+# 5. Visual Prioritisation
 
 Conditional formatting is used to distinguish:
-
 - Records that pass the defined checks
 - Records requiring review
 - Records requiring critical escalation
 
-6. Dashboard Development
-
+# 6. Dashboard Development
 A summary dashboard was added to provide an overview of the dataset, including AE volume, seriousness, outcomes, severity distribution, and flagged records.
 
-7. Testing
-
+# 7. Testing
 The tracker was tested against the deliberately introduced data-quality issues to confirm that the corresponding validation rules identified the intended records.
 
 
 
-Workbook Structure
+## Workbook Structure
 
 The workbook contains four main sheets:
 
-README
-
+# README
 Provides an in-workbook explanation of the tool, workflow, instructions, and flag definitions.
 
 "README sheet" (docs/screenshots/01-readme-sheet.jpg)
 
-AE LOG
+# AE LOG
 
 The primary data-entry and review sheet.
-
 Each row represents an AE record and includes the formula-driven "AUTO-FLAG" field.
 
 "AE Log with auto-flags" (docs/screenshots/02-ae-log-autoflags.jpg)
 
-Reference Lists
-
+# Reference Lists
 Contains the controlled values used by the workbook's dropdown fields.
 
 "Reference lists" (docs/screenshots/04-reference-lists.jpg)
 
-Summary Dashboard
-
+# Summary Dashboard
 Provides automatically calculated metrics and breakdowns for the current dataset.
 
 "Summary dashboard" (docs/screenshots/03-summary-dashboard.jpg)
 
 
 
-Data Fields
+## Data Fields
 
 Field| Purpose
 Subject ID| Simulated patient identifier in PT-XXX format
@@ -211,8 +192,7 @@ Date Reported| Date the AE was reported
 AUTO-FLAG| Formula-driven data-quality status
 
 
-
-Reference Lists
+## Reference Lists
 
 Dropdowns are driven by a dedicated reference sheet so coded fields remain standardised and free-text variation is reduced.
 
@@ -227,7 +207,7 @@ Dropdowns are driven by a dedicated reference sheet so coded fields remain stand
 
 
 
-Validation Rules
+## Validation Rules
 
 The "AUTO-FLAG" column applies predefined checks to each record.
 
@@ -243,7 +223,7 @@ These rules are intentionally limited to the checks implemented in the workbook.
 
 
 
-AUTO-FLAG Output
+## AUTO-FLAG Output
 
 The tracker returns one of six statuses:
 
@@ -256,22 +236,18 @@ The tracker returns one of six statuses:
 
 Conditional formatting is used to make these statuses visible during review.
 
-Formula
-
+# Formula
 The "AUTO-FLAG" formula is implemented directly in the AE LOG sheet and evaluates each record against the defined validation rules.
 
-PASTE YOUR ACTUAL AUTO-FLAG FORMULA HERE
 
 
-
-Summary Dashboard
+## Summary Dashboard
 
 The dashboard provides a high-level view of the current dataset and updates automatically as records are added or corrected.
 
 "Summary dashboard" (docs/screenshots/03-summary-dashboard.jpg)
 
 Current Dataset
-
 - Total AEs logged: 52
 - Serious AEs: 20
 - Fatal AEs: 3
@@ -279,8 +255,7 @@ Current Dataset
 - Records passing the defined first-pass checks: 35
 - Pass rate: 67.3%
 
-Breakdown Tables
-
+# Breakdown Tables
 The dashboard also provides:
 
 - AEs by System Organ Class
@@ -289,9 +264,7 @@ The dashboard also provides:
 - Counts and percentages for each category
 
 
-
-Key Findings
-
+## Key Findings
 The simulated dataset produced several data-quality observations:
 
 - 17 of 52 records were flagged, meaning approximately one-third of the dataset triggered at least one defined validation rule.
@@ -311,7 +284,7 @@ The simulated dataset produced several data-quality observations:
 
 
 
-Real-World Relevance
+## Real-World Relevance
 
 The workflow demonstrates concepts relevant to clinical data management and clinical research operations, including:
 
@@ -327,12 +300,8 @@ The workflow demonstrates concepts relevant to clinical data management and clin
 
 The project demonstrates the translation of clinical data requirements into a repeatable operational workflow.
 
-
-
-Skills Demonstrated
-
+## Skills Demonstrated
 Clinical & Research
-
 - Adverse event data review
 - Severity and seriousness assessment
 - Clinical data quality review
@@ -343,7 +312,6 @@ Clinical & Research
 - CTCAE severity grading
 
 Data & Technical
-
 - Microsoft Excel
 - Data validation
 - Formula-based validation logic
@@ -355,9 +323,7 @@ Data & Technical
 - Technical documentation
 
 
-
-Limitations
-
+## Limitations
 This is a portfolio simulation and not a validated clinical system.
 
 - All data is simulated.
@@ -370,10 +336,8 @@ This is a portfolio simulation and not a validated clinical system.
 
 
 
-Future Improvements
-
+## Future Improvements
 Potential extensions to the workflow include:
-
 - Add date validation to identify resolution dates earlier than onset dates
 - Add cross-checks between outcome and severity
 - Add more comprehensive seriousness-consistency rules
@@ -385,9 +349,7 @@ Potential extensions to the workflow include:
 - Explore low-code/API automation for transferring flagged records into a query-management workflow
 
 
-
-How to Use
-
+## How to Use
 1. Download "AE_Log_Tracker.xlsx" from the repository.
 2. Open the workbook in Microsoft Excel.
 3. Navigate to the AE LOG sheet.
@@ -400,8 +362,7 @@ No macros are required.
 
 
 
-Standards & References
-
+## Standards & References
 This project applies concepts from:
 
 - ICH E6(R2) — Good Clinical Practice
@@ -413,7 +374,7 @@ The project is an educational simulation and does not represent an FDA-approved,
 
 
 
-Project Structure
+## Project Structure
 
 ae-log-tracker/
 │
@@ -431,7 +392,7 @@ ae-log-tracker/
 
 
 
-Project Outcome
+## Project Outcome
 
 This project demonstrates how an Excel-based workflow can be used to structure AE data, apply predefined data-quality checks, identify records requiring review, and present dataset-level quality metrics.
 
