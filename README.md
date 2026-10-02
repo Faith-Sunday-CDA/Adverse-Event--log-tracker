@@ -1,210 +1,438 @@
-# Adverse Event (AE) Log Tracker and Data Quality Monitoring Tool
+Adverse Event (AE) Log Tracker & Data Quality Monitoring Tool
 
-An Excel-based tool that simulates how clinical data teams log adverse events (AEs) and run a first-pass data quality check before database lock. It automatically flags missing fields, misclassified serious AEs, and fatal outcomes that need escalation. The data structure is modelled on the FDA Adverse Event Reporting System (FAERS).
+An Excel-based clinical data quality tool designed to simulate a first-pass review of adverse event (AE) data in a fictional Phase III oncology trial.
 
+The tracker combines controlled data entry, rule-based validation, automated flagging, and summary reporting to identify incomplete records, potential classification inconsistencies, and events requiring review or escalation.
 
+The dataset structure was informed by concepts and fields used in the FDA Adverse Event Reporting System (FAERS), while the workflow was adapted for a simulated clinical-trial AE log.
 
-![AE Log with auto-flags](docs/screenshots/02-ae-log-autoflags.jpg)
+«Portfolio project: All study, patient, site, and AE data are simulated. No real patient data is used.»
 
+"AE Log with auto-flags" (docs/screenshots/02-ae-log-autoflags.jpg)
 
 
-**Note:** All data in this project is simulated for portfolio use. No real patient data is used.
 
-## Project at a Glance
+Project at a Glance
 
-- **Role:** Clinical Data Analyst (independent portfolio project)
-- **Tool:** Microsoft Excel
-- **Dataset:** 52 simulated AE records from a fictional Phase III oncology trial across 4 sites
-- **Core feature:** Formula-driven AUTO-FLAG column that checks every record for completeness and classification errors
-- **Output:** A four-sheet workbook with a data entry log, dropdown reference lists, and a live summary dashboard
-- **Standards applied:** ICH E6(R2) GCP, ICH E2A seriousness criteria, CTCAE severity grading, FAERS data structure
+| 
+Role| Clinical Data Analyst — Independent Portfolio Project
+Tool| Microsoft Excel
+Study context| Fictional Phase III oncology trial
+Sites| 4
+AE records| 52 simulated records
+Core workflow| AE data entry → validation → automated flagging → review → summary
+Core feature| Formula-driven "AUTO-FLAG" column
+Output| Four-sheet Excel workbook with controlled entry fields and live summary reporting
 
-## The Problem This Solves
-
-Clinical data teams manually review AE logs for completeness and accuracy before database lock. Missed flags can lead to protocol deviations and potential regulatory issues, and reviewing hundreds of rows by eye is slow and error-prone.
-
-This tool automates that first-pass check. A reviewer can open the log, see immediately which records are clean, which need a query to the site, and which need urgent escalation.
-
-## Trial Context
-
-- **Study type:** Fictional Phase III oncology trial
-- **Sites:** 4 (S-01 to S-04)
-- **Period:** Q1 2024
-- **Records:** 52 AE entries
-- **Data structure:** Modelled on FDA FAERS
-- **Severity grading:** CTCAE, Grade 1 (Mild) to Grade 5 (Fatal)
-- **Seriousness:** ICH E2A seriousness criteria
-
-## Methodology
-
-1. **Designed the data structure** using FAERS as the model, selecting the fields a reviewer needs to assess each event
-2. **Built standardised reference lists** for severity, system organ class, seriousness criteria, outcome, and relatedness
-3. **Applied data validation** so coded fields use dropdown menus instead of free text
-4. **Created a raw dataset with deliberate errors**, such as missing onset dates, missing severity grades, and serious events with no criteria. The errors were highlighted in yellow so I could test the tracker against known problems
-5. **Wrote the AUTO-FLAG logic** to check each record against defined data quality rules
-6. **Added conditional formatting** so problem rows stand out in green, yellow, and red
-7. **Built a summary dashboard** with metrics and breakdown tables that update automatically
-8. **Tested the flags** against the planted errors to confirm they were caught
-
-## The Input Dataset
-
-Before building the tracker, I created a raw AE dataset containing deliberate data quality issues (highlighted in yellow). This simulates the messy data a Clinical Data Associate receives and gave me a way to confirm the tracker works.
-
-
-
-![Raw AE dataset](docs/screenshots/05-raw-dataset.jpg)
-
-
-
-
-
-![Dataset notes and field legend](docs/screenshots/06-notes-and-legend.jpg)
-
-
-
-## Workbook Structure
-
-The workbook has four sheets:
-
-- **README:** In-workbook guide covering what the tool does, the problem it solves, how to use it, and the flag legend
-- **AE LOG:** Main data entry sheet, one row per AE, with an AUTO-FLAG column
-- **Reference Lists:** Source lists that power the dropdown menus
-- **Summary Dashboard:** Auto-calculated metrics and breakdown tables
-
-
-
-![README sheet](docs/screenshots/01-readme-sheet.jpg)
-
-
-
-## Data Fields
-
-- **Subject ID:** Unique patient identifier (format PT-XXX)
-- **Site ID:** Trial site, S-01 to S-04
-- **AE Description:** The adverse event term
-- **System Organ Class:** Body system category (dropdown)
-- **Onset Date:** Date the AE started
-- **Resolution Date:** Date the AE resolved
-- **Severity Grade:** CTCAE Grade 1 to 5 (dropdown)
-- **Serious? (Y/N):** Y means the event meets ICH E2A seriousness criteria
-- **Seriousness Criteria:** Required whenever Serious = Y (dropdown)
-- **Relatedness to Drug:** Investigator's causality assessment (dropdown)
-- **Outcome:** Patient status at time of report (dropdown). Fatal requires immediate escalation
-- **Reported By:** Investigator or CRA who reported the event
-- **Date Reported:** Date the AE was reported
-- **AUTO-FLAG:** Formula-driven data quality status
-
-## Reference Lists
-
-Dropdowns are driven by a dedicated sheet so every entry is standardised and free-text errors are avoided.
-
-- **Severity Grade:** Grade 1 - Mild, Grade 2 - Moderate, Grade 3 - Severe, Grade 4 - Life-Threatening, Grade 5 - Fatal
-- **System Organ Class:** Cardiac, Gastrointestinal, General, Infections and Infestations, Nervous System, Respiratory, Skin, Vascular
-- **Seriousness Criteria:** Hospitalization, Life-Threatening, Death, Disability or Incapacity, Congenital Anomaly, Other Medically Important
-- **Outcome:** Recovered / Resolved, Recovering / Resolving, Not Recovered / Not Resolved, Fatal, Unknown
-- **Relatedness:** Certain, Probable, Possible, Unlikely, Not Related
-- **Serious?:** Y, N
-
-
-
-![Reference lists](docs/screenshots/04-reference-lists.jpg)
-
-
-
-## Auto-Flag Logic
-
-The AUTO-FLAG column checks every row and returns one of six statuses:
-
-- **Complete:** No issues detected. The record is ready for review.
-- **Warning - Missing Onset Date:** Onset date is blank, so the AE cannot be placed on the study timeline.
-- **Warning - Missing Severity Grade:** Severity grade is blank, so severity and seriousness cannot be assessed.
-- **Warning - Serious AE, No Criteria Entered:** Serious? = Y but no seriousness criteria were recorded. ICH E2A requires the criteria to be documented.
-- **Warning - Grade 4 Should be Serious:** The event is Grade 4 (Life-Threatening) but marked as non-serious. This is a likely misclassification and needs a query to the site.
-- **Critical - Fatal, Escalate Immediately:** Outcome = Fatal. This requires immediate escalation.
-
-Conditional formatting colours these green, yellow, and red so that problem rows stand out at a glance.
-
-AUTO-FLAG formula used:
-
-(Paste your formula from cell N3 here)
-
-## Summary Dashboard
-
-The dashboard updates automatically as entries are added or corrected.
-
-
-
-![Summary dashboard](docs/screenshots/03-summary-dashboard.jpg)
-
-
-
-**Headline metrics:**
-
-- **Total AEs logged:** 52
-- **Serious AEs:** 20 (about 38% of all events)
-- **Fatal AEs:** 3
-- **Flagged entries:** 17
-- **Data completeness rate:** 67.3%
-
-**Breakdown tables:** AEs by System Organ Class, AEs by Severity Grade, and AEs by Outcome, each with counts and percentage of total.
-
-## Key Findings
-
-- 17 of 52 records (about one third) were flagged, which gives a data completeness rate of 67.3%. This shows how much cleaning work a dataset like this would need before database lock.
-- 20 of 52 events were classified as serious, and 3 had a fatal outcome, each requiring immediate escalation.
-- Severity was spread across all grades: Grade 1 (12), Grade 2 (13), Grade 3 (11), Grade 4 (9), Grade 5 (2).
-- General Disorders was the largest system organ class, with 13 AEs.
-- 20 events (38%) recovered or resolved, while 13 (25%) were not recovered or not resolved at the time of report.
-
-## Real-World Relevance
-
-This project simulates tasks performed in clinical data management and pharmacovigilance:
-
-- Reviewing AE data for completeness and consistency before database lock
-- Identifying records that need a data query to the investigator site
-- Checking that seriousness classification follows ICH E2A criteria
-- Escalating fatal outcomes immediately
-- Using standardised dictionaries and dropdowns to keep data consistent
-
-## Skills Demonstrated
-
-- Clinical data review and query identification
-- AE severity and seriousness assessment
-- Risk-based data monitoring
-- Data quality monitoring and validation logic
-- Excel formulas, data validation, and conditional formatting
-- Spreadsheet automation and dashboard design
-- Understanding of GCP, ICH E2A, CTCAE, and FAERS
-- Technical documentation
-
-## How to Use
-
-1. Download AE_Log_Tracker.xlsx from the tracker folder
-2. Open it in Microsoft Excel (no macros required)
-3. Go to the AE LOG sheet
-4. Enter or paste AE data, using the dropdown fields for coded values
-5. Check the AUTO-FLAG column and fix any warning or critical entries
-6. Open the Summary Dashboard for real-time metrics
-
-## Limitations
-
-- The data is simulated and the field set is simplified. This is not a full EDC system.
-- Events are classified to System Organ Class only, with no term-level MedDRA coding.
-- Excel provides no audit trail, unlike a validated EDC system.
-- The flags check completeness and consistency, not clinical correctness.
-
-## Future Improvements
-
-- Add a cross-check that an Outcome of Fatal corresponds to Grade 5 severity
-- Add date logic to catch resolution dates earlier than onset dates
-- Add MedDRA-style term coding
-- Add SAE reporting timeline tracking (for example, 24-hour reporting)
-- Build a Power BI version of the dashboard for trend monitoring
-
-## Standards and References
+Concepts Applied
 
 - ICH E6(R2) Good Clinical Practice
-- ICH E2A: Clinical Safety Data Management, definitions and standards
+- ICH E2A seriousness criteria
 - CTCAE severity grading
-- FDA Adverse Event Reporting System (FAERS) Public Dashboard: https://www.fda.gov/drugs/questions-and-answers-fdas-adverse-event-reporting-system-faers/faers-public-dashboard
+- FAERS-informed data structure
+- Clinical data quality review
+- Rule-based validation
+- Query identification and escalation
 
+
+The Problem
+Clinical data requires systematic review before it can be considered ready for downstream analysis or database lock.
+
+An AE record may be present in the database but still contain problems such as:
+
+- Missing onset dates
+- Missing severity information
+- Missing seriousness criteria
+- Inconsistent seriousness classification
+- Outcomes requiring escalation
+
+Reviewing these issues manually across a large dataset can make it difficult to identify problems consistently.
+
+This project demonstrates how simple spreadsheet automation can support a structured first-pass data quality review.
+
+
+
+What I Built
+
+I designed an Excel-based AE tracker that allows a reviewer to:
+
+1. Enter AE records using controlled fields
+2. Standardise coded values through dropdown lists
+3. Apply predefined data-quality rules to each record
+4. Automatically identify records requiring review
+5. Visually prioritise warnings and critical records
+6. Monitor overall dataset quality through a summary dashboard
+
+The goal was not to recreate a production EDC or safety database, but to demonstrate how clinical data requirements can be translated into a practical, rule-based workflow.
+
+
+Trial Context
+The project uses a fictional Phase III oncology study to provide a realistic context for the dataset.
+
+- Study type: Fictional Phase III oncology trial
+- Sites: S-01 to S-04
+- Reporting period: Q1 2024
+- AE records: 52
+- Patient identifiers: Simulated PT-XXX IDs
+- Severity: CTCAE Grades 1–5
+- Seriousness: ICH E2A criteria
+- Data structure: Informed by FAERS concepts
+
+
+
+Data Quality Workflow
+
+The workflow follows a simplified clinical data review process:
+
+AE Data Entry
+      ↓
+Controlled Field Selection
+      ↓
+Automated Validation Checks
+      ↓
+AUTO-FLAG
+      ↓
+Review / Query / Escalation
+      ↓
+Dashboard & Quality Summary
+
+This separates data capture from data-quality review, making it easier to identify records that require follow-up.
+
+
+Methodology
+
+1. Data Structure Design
+
+I defined the fields required to capture and review each simulated AE record, using FAERS-informed concepts while adapting the structure to a clinical-trial workflow.
+
+2. Controlled Reference Values
+
+I created a dedicated reference sheet containing standardised values for:
+
+- Severity grade
+- System Organ Class
+- Seriousness criteria
+- Outcome
+- Relatedness
+- Seriousness status
+
+These values feed the workbook's dropdown menus and reduce free-text variation.
+
+3. Simulated Data Creation
+
+I created a dataset of 52 AE records and deliberately introduced data-quality issues into selected records.
+
+Examples include:
+
+- Missing onset dates
+- Missing severity grades
+- Serious events without recorded seriousness criteria
+- Potential inconsistencies between severity and seriousness
+- Fatal outcomes requiring escalation
+
+The deliberate errors provided known test cases for validating the automated checks.
+
+"Raw AE dataset" (docs/screenshots/05-raw-dataset.jpg)
+
+"Dataset notes and field legend" (docs/screenshots/06-notes-and-legend.jpg)
+
+4. Validation Logic
+
+I created formula-based rules that evaluate each AE record and return an "AUTO-FLAG" status.
+
+The logic checks for defined completeness and consistency conditions rather than attempting to determine clinical correctness.
+
+5. Visual Prioritisation
+
+Conditional formatting is used to distinguish:
+
+- Records that pass the defined checks
+- Records requiring review
+- Records requiring critical escalation
+
+6. Dashboard Development
+
+A summary dashboard was added to provide an overview of the dataset, including AE volume, seriousness, outcomes, severity distribution, and flagged records.
+
+7. Testing
+
+The tracker was tested against the deliberately introduced data-quality issues to confirm that the corresponding validation rules identified the intended records.
+
+
+
+Workbook Structure
+
+The workbook contains four main sheets:
+
+README
+
+Provides an in-workbook explanation of the tool, workflow, instructions, and flag definitions.
+
+"README sheet" (docs/screenshots/01-readme-sheet.jpg)
+
+AE LOG
+
+The primary data-entry and review sheet.
+
+Each row represents an AE record and includes the formula-driven "AUTO-FLAG" field.
+
+"AE Log with auto-flags" (docs/screenshots/02-ae-log-autoflags.jpg)
+
+Reference Lists
+
+Contains the controlled values used by the workbook's dropdown fields.
+
+"Reference lists" (docs/screenshots/04-reference-lists.jpg)
+
+Summary Dashboard
+
+Provides automatically calculated metrics and breakdowns for the current dataset.
+
+"Summary dashboard" (docs/screenshots/03-summary-dashboard.jpg)
+
+
+
+Data Fields
+
+Field| Purpose
+Subject ID| Simulated patient identifier in PT-XXX format
+Site ID| Trial site identifier
+AE Description| Description of the reported adverse event
+System Organ Class| Body-system classification
+Onset Date| Date the AE began
+Resolution Date| Date the AE resolved
+Severity Grade| CTCAE Grade 1–5
+Serious? (Y/N)| Indicates whether the event is classified as serious
+Seriousness Criteria| Criterion supporting the seriousness classification
+Relatedness to Drug| Investigator's causality assessment
+Outcome| Status/outcome of the event
+Reported By| Investigator or CRA reporting the event
+Date Reported| Date the AE was reported
+AUTO-FLAG| Formula-driven data-quality status
+
+
+
+Reference Lists
+
+Dropdowns are driven by a dedicated reference sheet so coded fields remain standardised and free-text variation is reduced.
+
+- Severity Grade: Grade 1 — Mild, Grade 2 — Moderate, Grade 3 — Severe, Grade 4 — Life-Threatening, Grade 5 — Fatal
+- System Organ Class: Cardiac, Gastrointestinal, General, Infections and Infestations, Nervous System, Respiratory, Skin, Vascular
+- Seriousness Criteria: Hospitalization, Life-Threatening, Death, Disability or Incapacity, Congenital Anomaly, Other Medically Important
+- Outcome: Recovered / Resolved, Recovering / Resolving, Not Recovered / Not Resolved, Fatal, Unknown
+- Relatedness: Certain, Probable, Possible, Unlikely, Not Related
+- Serious?: Y, N
+
+"Reference lists" (docs/screenshots/04-reference-lists.jpg)
+
+
+
+Validation Rules
+
+The "AUTO-FLAG" column applies predefined checks to each record.
+
+Validation Rule| Condition Detected| Action
+Missing Onset Date| Onset Date is blank| Review/query the record
+Missing Severity Grade| Severity Grade is blank| Review/query the record
+Missing Seriousness Criteria| Serious = Y but no criterion is recorded| Review/query the record
+Potential Grade 4 Inconsistency| Grade 4 + Serious = N| Review classification
+Fatal Outcome| Outcome = Fatal| Escalate/review immediately
+Complete| No defined rule is triggered| No data-quality flag
+
+These rules are intentionally limited to the checks implemented in the workbook. They do not replace clinical review or investigator assessment.
+
+
+
+AUTO-FLAG Output
+
+The tracker returns one of six statuses:
+
+- Complete — No defined data-quality issue detected
+- Warning — Missing Onset Date
+- Warning — Missing Severity Grade
+- Warning — Serious AE, No Criteria Entered
+- Warning — Grade 4 Should be Serious
+- Critical — Fatal, Escalate Immediately
+
+Conditional formatting is used to make these statuses visible during review.
+
+Formula
+
+The "AUTO-FLAG" formula is implemented directly in the AE LOG sheet and evaluates each record against the defined validation rules.
+
+PASTE YOUR ACTUAL AUTO-FLAG FORMULA HERE
+
+
+
+Summary Dashboard
+
+The dashboard provides a high-level view of the current dataset and updates automatically as records are added or corrected.
+
+"Summary dashboard" (docs/screenshots/03-summary-dashboard.jpg)
+
+Current Dataset
+
+- Total AEs logged: 52
+- Serious AEs: 20
+- Fatal AEs: 3
+- Flagged entries: 17
+- Records passing the defined first-pass checks: 35
+- Pass rate: 67.3%
+
+Breakdown Tables
+
+The dashboard also provides:
+
+- AEs by System Organ Class
+- AEs by Severity Grade
+- AEs by Outcome
+- Counts and percentages for each category
+
+
+
+Key Findings
+
+The simulated dataset produced several data-quality observations:
+
+- 17 of 52 records were flagged, meaning approximately one-third of the dataset triggered at least one defined validation rule.
+- 35 of 52 records passed the defined first-pass checks, giving a pass rate of 67.3%.
+- 20 of 52 events were classified as serious.
+- 3 records had a fatal outcome, triggering the critical escalation rule.
+- Severity was distributed across all five CTCAE grades:
+  - Grade 1: 12
+  - Grade 2: 13
+  - Grade 3: 11
+  - Grade 4: 9
+  - Grade 5: 2
+- General Disorders was the largest System Organ Class, with 13 records.
+- 20 events were recorded as recovered/resolved, while 13 were not recovered/not resolved at the time of reporting.
+
+«These findings describe the simulated dataset and should not be interpreted as real clinical or pharmacovigilance findings.»
+
+
+
+Real-World Relevance
+
+The workflow demonstrates concepts relevant to clinical data management and clinical research operations, including:
+
+- First-pass AE data review
+- Data completeness checks
+- Identification of potential data inconsistencies
+- Query identification
+- Standardised data entry
+- Risk-based review
+- Escalation of critical records
+- Data-quality monitoring
+- Spreadsheet-based workflow automation
+
+The project demonstrates the translation of clinical data requirements into a repeatable operational workflow.
+
+
+
+Skills Demonstrated
+
+Clinical & Research
+
+- Adverse event data review
+- Severity and seriousness assessment
+- Clinical data quality review
+- Query identification
+- Risk-based data monitoring
+- GCP principles
+- ICH E2A concepts
+- CTCAE severity grading
+
+Data & Technical
+
+- Microsoft Excel
+- Data validation
+- Formula-based validation logic
+- Conditional formatting
+- Structured reference tables
+- Dashboard development
+- Data-quality monitoring
+- Spreadsheet automation
+- Technical documentation
+
+
+
+Limitations
+
+This is a portfolio simulation and not a validated clinical system.
+
+- All data is simulated.
+- The field set is simplified compared with a production EDC or safety database.
+- Events are classified at System Organ Class level; no term-level MedDRA coding is implemented.
+- Excel does not provide the validated audit trail and controlled environment expected of regulated clinical systems.
+- The validation rules identify predefined completeness and consistency issues but do not determine clinical correctness.
+- The tool does not replace investigator review, medical review, pharmacovigilance assessment, or formal safety reporting processes.
+- No real patient or clinical-trial data was used.
+
+
+
+Future Improvements
+
+Potential extensions to the workflow include:
+
+- Add date validation to identify resolution dates earlier than onset dates
+- Add cross-checks between outcome and severity
+- Add more comprehensive seriousness-consistency rules
+- Add MedDRA-style term coding
+- Add SAE reporting timeline monitoring
+- Generate a query record automatically when a validation rule is triggered
+- Add query status, owner, date raised, and resolution tracking
+- Add Power BI reporting for trend analysis across sites and time
+- Explore low-code/API automation for transferring flagged records into a query-management workflow
+
+
+
+How to Use
+
+1. Download "AE_Log_Tracker.xlsx" from the repository.
+2. Open the workbook in Microsoft Excel.
+3. Navigate to the AE LOG sheet.
+4. Enter or paste AE records using the controlled dropdown fields.
+5. Review the "AUTO-FLAG" column.
+6. Investigate records with warnings or critical flags.
+7. Open the Summary Dashboard to review the updated dataset metrics.
+
+No macros are required.
+
+
+
+Standards & References
+
+This project applies concepts from:
+
+- ICH E6(R2) — Good Clinical Practice
+- ICH E2A — Clinical Safety Data Management: Definitions and Standards for Expedited Reporting
+- CTCAE — Common Terminology Criteria for Adverse Events
+- FDA FAERS — Used as an informing reference for aspects of the data structure
+
+The project is an educational simulation and does not represent an FDA-approved, GCP-validated, or regulatory reporting system.
+
+
+
+Project Structure
+
+ae-log-tracker/
+│
+├── README.md
+├── AE_Log_Tracker.xlsx
+│
+└── docs/
+    └── screenshots/
+        ├── 01-readme-sheet.jpg
+        ├── 02-ae-log-autoflags.jpg
+        ├── 03-summary-dashboard.jpg
+        ├── 04-reference-lists.jpg
+        ├── 05-raw-dataset.jpg
+        └── 06-notes-and-legend.jpg
+
+
+
+Project Outcome
+
+This project demonstrates how an Excel-based workflow can be used to structure AE data, apply predefined data-quality checks, identify records requiring review, and present dataset-level quality metrics.
+
+It also provides a foundation for extending the workflow into more advanced clinical data operations, query management, reporting, and automation.
