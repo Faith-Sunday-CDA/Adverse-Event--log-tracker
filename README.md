@@ -6,7 +6,7 @@ The tracker combines controlled data entry, rule-based validation, automated fla
 The dataset structure was informed by concepts and fields used in the FDA Adverse Event Reporting System (FAERS), while the workflow was adapted for a simulated clinical-trial AE log.
 
 «Portfolio project: All study, patient, site, and AE data are simulated. No real patient data is used.»
-"AE Log with auto-flags" (docs/screenshots/02-ae-log-autoflags.jpg)
+"AE Log with auto-flags" ![AE Log AUTO-FLAG output](02-ae-log-autoflags.jpg)
 
 
 
