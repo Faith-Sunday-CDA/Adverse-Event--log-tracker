@@ -76,6 +76,7 @@ The project uses a fictional Phase III oncology study to provide a realistic con
 ## Data Quality Workflow
 The workflow follows a simplified clinical data review process:
 
+
 AE Data Entry
       ↓
 Controlled Field Selection
@@ -89,9 +90,12 @@ Review / Query / Escalation
 Dashboard & Quality Summary
 
 This separates data capture from data-quality review, making it easier to identify records that require follow-up.
+![Notes and Legend](06-notes-and-legend.jpg)
 
 
 ## Methodology
+
+![Raw AE Dataset](05-raw-dataset.jpg)
 
 # 1. Data Structure Design
 
@@ -146,30 +150,29 @@ The tracker was tested against the deliberately introduced data-quality issues t
 
 
 ## Workbook Structure
-
 The workbook contains four main sheets:
 
 # README
 Provides an in-workbook explanation of the tool, workflow, instructions, and flag definitions.
 
-"README sheet" (docs/screenshots/01-readme-sheet.jpg)
+![README Sheet](01-readme-sheet.jpg)
 
 # AE LOG
 
 The primary data-entry and review sheet.
 Each row represents an AE record and includes the formula-driven "AUTO-FLAG" field.
 
-"AE Log with auto-flags" (docs/screenshots/02-ae-log-autoflags.jpg)
+![AE Log AUTO-FLAG output](02-ae-log-autoflags.jpg)
 
 # Reference Lists
 Contains the controlled values used by the workbook's dropdown fields.
 
-"Reference lists" (docs/screenshots/04-reference-lists.jpg)
+![Reference Lists](04-reference-lists.jpg)
 
 # Summary Dashboard
 Provides automatically calculated metrics and breakdowns for the current dataset.
 
-"Summary dashboard" (docs/screenshots/03-summary-dashboard.jpg)
+![Summary Dashboard](03-summary-dashboard.jpg)
 
 
 
@@ -203,7 +206,7 @@ Dropdowns are driven by a dedicated reference sheet so coded fields remain stand
 - Relatedness: Certain, Probable, Possible, Unlikely, Not Related
 - Serious?: Y, N
 
-"Reference lists" (docs/screenshots/04-reference-lists.jpg)
+![Reference Lists](04-reference-lists.jpg)
 
 
 
